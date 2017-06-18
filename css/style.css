@@ -6,6 +6,11 @@
   height: 350px;
 }
 
+.viz-card .card-content,
+.viz-card .card-content .center-viz {
+  max-height: 450px;
+}
+
 .map-col {
   height: 350px;
 }
@@ -29,4 +34,5 @@ nav .brand-logo,
 
 .center-viz {
   text-align: center;
+  max-height: 100%;
 }

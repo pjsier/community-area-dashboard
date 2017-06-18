@@ -15,17 +15,6 @@ function gaugeChart() {
       colorOptions = ["#d7191c", "#efef5d", "#1a9641"];
       arc = d3.arc();
 
-  // Arc tween example adapted from http://bl.ocks.org/mbostock/5100636
-  function arcTween(scale, attr) {
-    return function(d) {
-      var interpolate = d3.interpolate(d.endAngle, scale(d[attr]));
-      return function(t) {
-        d.endAngle = interpolate(t);
-        return arc(d);
-      };
-    };
-  }
-
   function chart(selection) {
     selection.each(function(data) {
       // Convert data to standard representation greedily;
@@ -44,7 +33,10 @@ function gaugeChart() {
       var gEnter = svg.enter().append("svg").append("g");
       var arcGEnter = gEnter.append("g").attr("class", "arc");
       arcGEnter.append("path").attr("class", "bg-arc");
-      arcGEnter.append("path").attr("class", "data-arc");
+      arcGEnter.append("path").attr("class", "data-arc")
+        .datum({endAngle: arcMin, startAngle: arcMin, score: 0})
+        .attr("d", arc)
+        .each(function(d) { this._current = d; });
       arcGEnter.append("text").attr("class", "arc-label");
 
       // Update the outer dimensions.
@@ -57,21 +49,28 @@ function gaugeChart() {
       var arcG = svg.select("g.arc")
         .attr("transform", "translate(" +
           ((width - margin.left - margin.right) / 2) + "," +
-          (((height - margin.top - margin.bottom) / 2) * 1.75) + ")");
+          ((height - margin.top - margin.bottom) / 2) + ")");
 
       svg.select("g.arc .bg-arc")
         .datum({endAngle: arcMax})
         .style("fill", "#ddd")
         .attr("d", arc);
 
-      var dataArc = svg.select("g.arc .data-arc")
-        .datum({endAngle: arcMin, score: data[0]})
-        .style("fill", function(d) { return colorScale(d.score); })
-        .attr("d", arc);
+      // https://bl.ocks.org/mbostock/1346410
+      function arcTween(a) {
+        var i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return function(t) {
+          return arc(i(t));
+        };
+      }
 
-      dataArc.transition()
-        .duration(750)
-        .attrTween("d", arcTween(arcScale, "score"));
+      var dataArc = svg.select("g.arc .data-arc")
+        .datum({score: data[0], startAngle: arcMin, endAngle: arcScale(data[0])})
+        .style("fill", function(d) { return colorScale(d.score); })
+          .transition()
+          .duration(750)
+          .attrTween("d", arcTween);
 
       var arcBox = arcG.node().getBBox();
       svg.select("text.arc-label")
@@ -132,7 +131,7 @@ function gaugeChart() {
 
 
 function donutChart() {
-  var margin = {top: 10, right: 10, bottom: 10, left: 10},
+  var margin = {top: 10, right: 10, bottom: 40, left: 10},
       width = 350,
       height = 350,
       donutWidth = 60,
@@ -269,7 +268,7 @@ function donutChart() {
 
 
 function barChart() {
-  var margin = {top: 10, right: 10, bottom: 40, left: 40},
+  var margin = {top: 10, right: 10, bottom: 60, left: 40},
       width = 350,
       height = 350,
       labelValue = function(d) {
@@ -287,8 +286,8 @@ function barChart() {
       data = data.map(function(d, i) {
         return { label: labelValue(d), value: dataValue(d) };
       });
-      var x = d3.scaleBand().rangeRound([0, width-margin.top-margin.bottom]).padding(bandPadding),
-          y = d3.scaleLinear().rangeRound([0, height-margin.left-margin.right]);
+      var x = d3.scaleBand().rangeRound([0, height-margin.top-margin.bottom]).padding(bandPadding),
+          y = d3.scaleLinear().rangeRound([0, width-margin.left-margin.right]);
 
       x.domain(data.map(function(d) { return d.label; }));
       y.domain([0, d3.max(data, dataValue)]);

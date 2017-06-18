@@ -1,15 +1,28 @@
 var commData, commGeo, map;
 var gauge = gaugeChart()
   .width(250)
-  .height(150)
+  .height(250)
   .colorOptions(["#1a9641", "#efef5d", "#d7191c"])
   .innerRadius(80)
   .outerRadius(120).margin({top: 0,left: 0,right: 0,bottom: 0});
 var donut = donutChart();
 var bars = barChart();
 
+function resize() {
+  gauge.width(+d3.select("#gauge").style("width").replace(/(px)/g, ""));
+  d3.select("#gauge").call(gauge);
+
+  donut.width(+d3.select("#donut").style("width").replace(/(px)/g, ""))
+    .height(+d3.select("#donut").style("height").replace(/(px)/g, ""));
+  d3.select("#donut").call(donut);
+
+  bars.width(+d3.select("#bars").style("width").replace(/(px)/g, ""))
+    .height(+d3.select("#bars").style("height").replace(/(px)/g, ""));
+  d3.select("#bars").call(bars);
+}
+
 function loadCharts() {
-  d3.select("#gauge").datum([0]).call(gauge);
+  // d3.select("#gauge").datum([0]).call(gauge);
 
   map = L.map("map-container", {dragging: !L.Browser.mobile});
   var osm = new L.TileLayer(
@@ -90,4 +103,5 @@ function updateData(commArea) {
       updateData(location.hash.substr(1));
     });
   });
+  d3.select(window).on('resize', resize);
 })()
