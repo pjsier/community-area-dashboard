@@ -1,0 +1,32 @@
+#viz {
+  display: none;
+}
+
+#viz .row:first-of-type .col:first-of-type .card {
+  height: 350px;
+}
+
+.map-col {
+  height: 350px;
+}
+
+.map-col .card,
+#map-container {
+  height: 100%;
+}
+
+#chi-star {
+  height: 45px;
+  vertical-align: middle;
+}
+
+nav ul a,
+nav .brand-logo,
+.dropdown-content li>a,
+.dropdown-content li>span {
+  color: rgba(0,0,0,0.87);
+}
+
+.center-viz {
+  text-align: center;
+}

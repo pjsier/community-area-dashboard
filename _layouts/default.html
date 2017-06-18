@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{page.title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset='utf-8' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{site.baseurl}}/css/style.css">
+  </head>
+  <body>
+  <script>
+  var baseUrl = "{{site.baseurl}}";
+  </script>
+  <div class="navbar-fixed">
+    <nav class="cyan lighten-4" role="navigation">
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo hide-on-med-and-down">
+          <img id="chi-star" src="{{site.baseurl}}/css/chi-star.svg"> Community Area Dashboard
+        </a>
+        <ul id="dropdown1" class="dropdown-content">
+          {% for comm in site.community_areas %}
+          <li><a href="#{{comm}}">{{comm}}</a></li>
+          {% endfor %}
+        </ul>
+        <ul class="right">
+          <li>
+            <a class="dropdown-button" href="#!" data-activates="dropdown1">
+              <span class="commLabel">Community Areas</span>
+              <i class="material-icons right">arrow_drop_down</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  {{content}}
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script src="{{site.baseurl}}/js/viz.js"></script>
+  <script src="{{site.baseurl}}/js/script.js"></script>
+  </body>
+</html>
