@@ -9,6 +9,9 @@ var donut = donutChart();
 var bars = barChart();
 
 function resize() {
+  if (d3.select("#gauge svg").empty()) {
+    return;
+  }
   gauge.width(+d3.select("#gauge").style("width").replace(/(px)/g, ""));
   d3.select("#gauge").call(gauge);
 
@@ -22,8 +25,6 @@ function resize() {
 }
 
 function loadCharts() {
-  // d3.select("#gauge").datum([0]).call(gauge);
-
   map = L.map("map-container", {dragging: !L.Browser.mobile});
   var osm = new L.TileLayer(
     "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
