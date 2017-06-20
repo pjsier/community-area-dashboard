@@ -33,12 +33,16 @@ function loadCharts() {
 
   map.addLayer(osm);
   map.setView([41.907477, -87.685913], 10);
-  neighborhoodLayer = L.geoJson().addTo(map);
+  commGeo = L.geoJson().addTo(map);
 
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", function() {
     var commAreas = JSON.parse(this.responseText);
-    commGeo = L.geoJson(commAreas).addTo(map);
+    commGeo = L.geoJson(commAreas, {
+      color: "#4dd0e1",
+      weight: 1,
+      opacity: 0.6
+    }).addTo(map);
   });
   xhr.open("GET", baseUrl + "/data/chi_comm_areas.geojson");
   xhr.send();
@@ -84,8 +88,11 @@ function updateData(commArea) {
   map.invalidateSize();
   commGeo.eachLayer(function(layer) {
     if (layer.feature.properties.community == commArea.toUpperCase()) {
+      layer.setStyle({fillColor: "#ff0000"});
       map.fitBounds(layer.getBounds());
-      return;
+    }
+    else {
+      layer.setStyle({fillColor: "#4dd0e1"});
     }
   });
 

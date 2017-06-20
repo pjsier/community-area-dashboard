@@ -67,10 +67,10 @@ function gaugeChart() {
 
       var dataArc = svg.select("g.arc .data-arc")
         .datum({score: data[0], startAngle: arcMin, endAngle: arcScale(data[0])})
-        .style("fill", function(d) { return colorScale(d.score); })
           .transition()
           .duration(750)
-          .attrTween("d", arcTween);
+            .style("fill", function(d) { return colorScale(d.score); })
+            .attrTween("d", arcTween);
 
       var arcBox = arcG.node().getBBox();
       svg.select("text.arc-label")
