@@ -1,10 +1,10 @@
 var commData, commGeo, map;
 var gauge = gaugeChart()
-  .width(250)
-  .height(250)
+  .width(300)
+  .height(200)
   .colorOptions(["#1a9641", "#efef5d", "#d7191c"])
-  .innerRadius(80)
-  .outerRadius(120).margin({top: 0,left: 0,right: 0,bottom: 0});
+  .innerRadius(50)
+  .outerRadius(80).margin({top: 0,left: 0,right: 0,bottom: 0});
 var donut = donutChart();
 var bars = barChart();
 
@@ -12,7 +12,8 @@ function resize() {
   if (d3.select("#gauge svg").empty()) {
     return;
   }
-  gauge.width(+d3.select("#gauge").style("width").replace(/(px)/g, ""));
+  var gWidth = Math.min(d3.select("#gauge").node().offsetWidth, 260);
+  gauge.width(gWidth).innerRadius(gWidth / 4).outerRadius((gWidth / 4) + 40);
   d3.select("#gauge").call(gauge);
 
   donut.width(+d3.select("#donut").style("width").replace(/(px)/g, ""))
@@ -98,6 +99,7 @@ function updateData(commArea) {
 
   d3.select("#donut").datum(donutVals(commItem)).call(donut);
   d3.select("#bars").datum(barVals(commItem)).call(bars);
+  resize();
 }
 
 (function() {
