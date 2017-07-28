@@ -107,10 +107,17 @@ function updateData(commArea) {
   d3.csv(baseUrl + "/data/community_area_data.csv", function(data) {
     commData = data;
     window.addEventListener("hashchange", function() {
-      $("#viz").show();
-      var commArea = location.hash.substr(1);
-      $(".commLabel").text(commArea);
-      updateData(location.hash.substr(1));
+      var commArea = decodeURIComponent(location.hash.substr(1));
+      if (commArea === "") {
+        $("h3.commLabel").text("Select a community area to view dashboard.");
+        $("span.commLabel").text("Community Areas");
+        $("#viz").hide();
+      }
+      else {
+        $("#viz").show();
+        $(".commLabel").text(commArea);
+        updateData(commArea);
+      }
     });
   });
   d3.select(window).on('resize', resize);
